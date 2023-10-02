@@ -1,0 +1,41 @@
+---
+- name: Remove Tomcat
+  hosts: app
+  become: yes
+  tasks:
+    - name: Stop the tomcat service
+      systemd:
+        name: tomcat
+        state: stopped
+      ignore_errors: yes  # Ignore errors if the service is not running
+
+    - name: Disable the tomcat service
+      systemd:
+        name: tomcat
+        enabled: no
+      ignore_errors: yes  # Ignore errors if the service is not enabled
+
+    - name: Remove the Tomcat installation directory
+      file:
+        path: /opt/tomcat9
+        state: absent
+
+    - name: Remove the tomcat user
+      user:
+        name: tomcat
+        state: absent
+
+    - name: Remove the tomcat group
+      group:
+        name: tomcat
+        state: absent
+
+    - name: Remove the tomcat systemd service file
+      file:
+        path: /etc/systemd/system/tomcat.service
+        state: absent
+
+    - name: Reload the SystemD to re-read configurations
+      systemd:
+        daemon-reload: yes
+

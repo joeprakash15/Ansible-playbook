@@ -1,0 +1,16 @@
+---
+- name: Install Python 3.10.12
+  hosts: 3.110.174.46
+  become: yes  # This ensures that Ansible runs the tasks with sudo privileges
+    #become_user: ubuntu
+
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Install Python 3.10.12
+      apt:
+        name: python3.10
+        state: present
+
